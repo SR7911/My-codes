@@ -38,3 +38,7 @@
 
 * Local Chat data will be cleared every time and new data will be automatically inserted while invoking testbot.
 
+## 1.2.3
+
+* Lower the version of Test bot func flow not affected by higher versions.
+
