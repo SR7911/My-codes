@@ -1,5 +1,5 @@
 group 'com.example.testbot'
-version '1.0'
+version '2.0'
 
 buildscript {
     repositories {
@@ -22,7 +22,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

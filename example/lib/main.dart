@@ -24,7 +24,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initPlatformState();
-    supportdialogue(context);
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -49,12 +48,22 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  int change = 1;
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
         home: Scaffold(
       appBar: AppBar(
         title: const Text('Plugin example app'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                change = change == 1 ? 2 : 1;
+                setState(() {});
+              },
+              icon: Icon(Icons.change_circle))
+        ],
       ),
       body: Stack(children: [
         Positioned(
@@ -110,14 +119,15 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             )),
-        supportdialogue(context),
-      ]
-
-          // supportdialogue(context),
-          // body: Center(
-          //   child: Text('Running on: $_platformVersion\n'),
-          // ),
-          ),
+        supportdialogue(
+            bottommargin: Get.height / 6.5,
+            topmargin: Get.height / 50,
+            context: context,
+            empid: "36370",
+            clientid: "3008",
+            initialvisibility: true,
+            module: change)
+      ]),
     ));
   }
 }

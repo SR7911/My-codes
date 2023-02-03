@@ -1,6 +1,6 @@
 # testbot
 
-A new Flutter project.
+A new Flutter project for contacting support for application issues.
 
 ## Getting Started
 
