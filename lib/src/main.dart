@@ -7,12 +7,10 @@ import 'package:get/get.dart';
 import 'package:testbot/src/apiservice.dart';
 import 'package:testbot/src/color.dart';
 import 'package:testbot/src/components.dart';
-import 'package:testbot/src/constants.dart';
 import 'package:testbot/src/controller.dart';
 import 'package:testbot/src/model/support_details_model.dart';
 import 'package:testbot/src/model/upload_chat_model.dart';
 import 'package:testbot/src/model/upload_support_model.dart';
-import 'package:testbot/testbot.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final controller = Get.put(Controller());
@@ -27,6 +25,12 @@ Widget supportdialogue(
     required BuildContext context,
     required String empid,
     required String clientid,
+    required String appName,
+    required String getPreDefineQueApi,
+    required String getEmpDetailsApi,
+    required String getIssueTypeApi,
+    required String insertSupportQueTypeApi,
+    required String insertSupportQueApi,
     required bool initialvisibility,
     required int module}) {
   return Stack(
@@ -63,14 +67,20 @@ Widget supportdialogue(
 
               try {
                 showAlertDialog(Get.context!);
-                await controller.getChatData();
-                await controller.getissuetypedata();
-                await controller.getsupportdata(empid, clientid);
+                await controller.getChatData(
+                    appname: appName,
+                    clientId: clientid,
+                    url: getPreDefineQueApi);
+                await controller.getissuetypedata(url: getIssueTypeApi);
+                await controller.getsupportdata(
+                    empid: empid, clientid: clientid, url: getEmpDetailsApi);
                 controller.fileList.clear();
                 // await controller.getsupportdata("36370", "3008");
                 Get.back();
               } catch (e) {}
-              module == 1 ? autochat() : supportbot();
+              module == 1
+                  ? autochat(insertSupportQueTypeApi: insertSupportQueTypeApi)
+                  : supportbot(insertSupportQueAPI: insertSupportQueApi);
             },
             color: Colors.white,
           ),
@@ -100,7 +110,7 @@ void launchUrl(String url) async {
   }
 }
 
-supportbot() {
+supportbot({required String insertSupportQueAPI}) {
   return showDialog(
     context: Get.context!,
     builder: (context) {
@@ -167,6 +177,11 @@ supportbot() {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey.shade300),
                           ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                           Text(
                             " (${controller.supportDetailsModel.value.supportingPersonEmailId})",
                             style: TextStyle(
@@ -184,12 +199,12 @@ supportbot() {
                               color: Colors.white,
                               iconSize: 18.0)
                         ],
-                      ),
+                      )
                     ],
                   ),
                 ),
               ),
-              buildRow(context),
+              buildRow(context, insertSupportQueAPI: insertSupportQueAPI),
             ],
           ),
         ),
@@ -198,7 +213,7 @@ supportbot() {
   );
 }
 
-sendsupportissue() async {
+sendsupportissue({required String url}) async {
   List<FileNameFile> listFile = [];
 
   for (int i = 0; i < controller.fileList.length; i++) {
@@ -209,8 +224,8 @@ sendsupportissue() async {
 
   UploadSupportModel model = UploadSupportModel();
   model.applicationName = "Support Bot";
-  model.client = "3008";
-  model.employeeId = "36370";
+  model.client = controller.supportDetailsModel.value.client;
+  model.employeeId = controller.supportDetailsModel.value.employeeId;
   model.employeeName = controller.supportDetailsModel.value.employeeName;
   model.mobileNo = controller.supportDetailsModel.value.mobileNo;
   model.emailid = controller.supportDetailsModel.value.emailId;
@@ -231,20 +246,21 @@ sendsupportissue() async {
   List<FileNameFile> d = List<FileNameFile>.from(
       json.decode(addedfiles).map((x) => FileNameFile.fromJson(x)));
   model.fileName = d;
-  model.createdBy = "Sudharsan";
+  model.createdBy = "ChatBot";
   model.status = "Pending";
   print(model.toJson());
 
   var response = await APICalls.apicall(
       label: "UploadSupportData",
       requests: "POST",
-      uri: "http://devsupport.ppms.co.in/api/ChatBot/InsertSupportQuery",
+      uri: url,
+      // uri: "http://devsupport.ppms.co.in/api/ChatBot/InsertSupportQuery",
       param: model.toJson());
 
   return response;
 }
 
-sendchatissue() async {
+sendchatissue({required String url}) async {
   controller.issueContent.value =
       "${controller.selectedstartchat}'->'${controller.selectedquestion1}'->'${controller.selectedquestion2}'->'${controller.selectedquestion3}'->'${controller.selectedquestion4}'->'${controller.selectedquestion5}'->'${controller.selectedendquestion}";
   List<FileNameFile> listFile = [];
@@ -257,8 +273,8 @@ sendchatissue() async {
 
   UploadChatModel model = UploadChatModel();
   model.applicationName = "Chat Bot";
-  model.client = "3008";
-  model.employeeId = "36370";
+  model.client = controller.supportDetailsModel.value.clientId;
+  model.employeeId = controller.supportDetailsModel.value.employeeId;
   model.employeeName = controller.supportDetailsModel.value.employeeName;
   model.mobileNo = controller.supportDetailsModel.value.mobileNo;
   model.emailid = controller.supportDetailsModel.value.emailId;
@@ -279,20 +295,21 @@ sendchatissue() async {
   List<FileNameFile> d = List<FileNameFile>.from(
       json.decode(addedfiles).map((x) => FileNameFile.fromJson(x)));
   model.fileName = d;
-  model.createdBy = "Sudharsan";
+  model.createdBy = "ChatBot";
   model.status = "Pending";
   print(model.toJson());
 
   List response = await APICalls.apicall(
       label: "UploadChatData",
       requests: "POST",
-      uri: "http://devsupport.ppms.co.in/api/ChatBot/InsertSupportQueryType2",
+      uri: url,
+      // uri: "http://devsupport.ppms.co.in/api/ChatBot/InsertSupportQueryType2",
       param: model.toJson());
 
   return response;
 }
 
-Widget buildRow(BuildContext context) {
+Widget buildRow(BuildContext context, {required String insertSupportQueAPI}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 0.0),
     child: Column(
@@ -399,6 +416,7 @@ Widget buildRow(BuildContext context) {
                     cursorHeight: 25.0,
                     textDirection: TextDirection.ltr,
                     minLines: 6,
+                    textInputAction: TextInputAction.done, //iOS
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                   ),
@@ -593,7 +611,8 @@ Widget buildRow(BuildContext context) {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           showAlertDialog(Get.context!);
-                          await sendsupportissue().then((response) {
+                          await sendsupportissue(url: insertSupportQueAPI)
+                              .then((response) {
                             if (response[0]) {
                               Get.back();
                               Get.back();
@@ -645,7 +664,7 @@ void _scrollDown() {
   );
 }
 
-autochat() {
+autochat({required String insertSupportQueTypeApi}) {
   controller.fileList.clear();
   showDialog(
     context: Get.context!,
@@ -701,7 +720,8 @@ autochat() {
                     child: ListView(
                       controller: _controller,
                       children: [
-                        chattextfrombot("Hi User27, May I help you?"),
+                        chattextfrombot(
+                            "Hi ${controller.supportDetailsModel.value.employeeName ?? ''}, May I help you?"),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
                           child: ListView.builder(
@@ -797,7 +817,7 @@ autochat() {
                 ),
                 const Divider(color: Colors.grey),
                 if (controller.selectedendquestion.value != "")
-                  sendmessage(context),
+                  sendmessage(context, insertSupportQueTypeApi: insertSupportQueTypeApi),
               ],
             ),
           ),
@@ -1095,231 +1115,228 @@ Widget chattext(String text) {
   );
 }
 
-sendmessage(BuildContext context) {
+sendmessage(BuildContext context, {required String insertSupportQueTypeApi}) {
   return Obx(
-    () => SingleChildScrollView(
-      physics: const NeverScrollableScrollPhysics(),
-      child: Column(
-        children: [
-          const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: Text(
-                  "Support Attach",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
+    () => ListView(
+      children: [
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Text(
+                "Support Attach",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
                 ),
               ),
-              Row(
-                children: [
-                  if (controller.fileList.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: GestureDetector(
-                        onTap: () {
-                          controller.fileList.clear();
-                        },
-                        child: Card(
-                          elevation: 5,
-                          color: Colors.red,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40)),
-                          child: const Padding(
-                            padding: EdgeInsets.all(4.0),
-                            child: Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+            ),
+            Row(
+              children: [
+                if (controller.fileList.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                     child: GestureDetector(
-                      onTap: () async {
-                        List selectedImgList = [];
-                        FilePickerResult? result = await FilePicker.platform
-                            .pickFiles(
-                                allowMultiple: true, type: FileType.image);
-                        if (result == null) {
-                          print("No file selected");
-                        } else {
-                          showAlertDialog(Get.context!);
-                          result.files.forEach((element) {
-                            // print('test: ${element.name}');
-                            selectedImgList.add(element);
-                          });
-                        }
-                        controller.fileList.value = [];
-                        for (int i = 0; i < selectedImgList.length; i++) {
-                          File file = File(selectedImgList[i].path);
-                          var compressedImg = await compressFile(file, context);
-                          var baseImg = base64String(compressedImg);
-                          controller.fileList.add(baseImg);
-                        }
-                        Get.back();
-
-                        print('fileList length: ${controller.fileList.length}');
+                      onTap: () {
+                        controller.fileList.clear();
                       },
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            child: Card(
-                              elevation: 5,
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(40)),
-                              child: const Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Icon(
-                                  Icons.attachment,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
+                      child: Card(
+                        elevation: 5,
+                        color: Colors.red,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40)),
+                        child: const Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.white,
                           ),
-                          Obx(
-                            () => Positioned(
-                              left: controller.fileList.length <= 99 ? 25 : 20,
-                              bottom: 28,
-                              child: Text(
-                                controller.fileList.length <= 99
-                                    ? "${controller.fileList.length}"
-                                    : "99+",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-          if (controller.fileList.isNotEmpty)
-            const Divider(
-              color: Colors.grey,
-            ),
-          if (controller.fileList.isNotEmpty)
-            SizedBox(
-              height: 50,
-              child: ListView.builder(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.fileList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    // print(
-                    //     'controller.fileList.length: ${controller.fileList.length}, ${controller.fileList[index]}');
-                    return Row(
-                      children: [
-                        // Image.file(
-                        //     File(controller.fileList[index].path)),
-                        InteractiveViewer(
-                            minScale: 1.0,
-                            maxScale: 10.0,
-                            child: Image.memory(
-                              base64Decode(controller.fileList[index]),
-                              fit: BoxFit.contain,
-                              gaplessPlayback: true,
-                            )),
-                        const SizedBox(
-                          width: 10,
-                        )
-                      ],
-                    );
-                  }),
-            ),
-          const Divider(color: Colors.grey),
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Expanded(
-                  child: Material(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white,
-                    elevation: 5,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 8.0, top: 2, bottom: 2),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Description",
                         ),
-                        validator: ((value) {
-                          if (value == null || value == "") {
-                            return "Description is empty";
-                          } else {
-                            return null;
-                          }
-                        }),
-                        controller: controller.description,
-                        style: TextStyle(fontSize: 18),
-                        cursorHeight: 25.0,
-                        textDirection: TextDirection.ltr,
-                        minLines: 2,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 3,
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: Card(
-                    elevation: 5,
-                    color: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40)),
-                    child: Center(
-                      child: IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            showAlertDialog(Get.context!);
-                            await sendchatissue().then((response) {
-                              if (response[0]) {
-                                Get.back();
-                                Get.back();
-                                snackbar(
-                                    'Report has been recorded successfully.');
-                                clearalldata();
-                              } else {
-                                Get.back();
-                                Get.back();
-                                snackbar(
-                                    'Something went wrong, please try later');
-                              }
-                            });
-                          }
-                        },
-                        color: Colors.white,
-                      ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      List selectedImgList = [];
+                      FilePickerResult? result = await FilePicker.platform
+                          .pickFiles(allowMultiple: true, type: FileType.image);
+                      if (result == null) {
+                        print("No file selected");
+                      } else {
+                        showAlertDialog(Get.context!);
+                        result.files.forEach((element) {
+                          // print('test: ${element.name}');
+                          selectedImgList.add(element);
+                        });
+                      }
+                      controller.fileList.value = [];
+                      for (int i = 0; i < selectedImgList.length; i++) {
+                        File file = File(selectedImgList[i].path);
+                        var compressedImg = await compressFile(file, context);
+                        var baseImg = base64String(compressedImg);
+                        controller.fileList.add(baseImg);
+                      }
+                      Get.back();
+
+                      print('fileList length: ${controller.fileList.length}');
+                    },
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          child: Card(
+                            elevation: 5,
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40)),
+                            child: const Padding(
+                              padding: EdgeInsets.all(4.0),
+                              child: Icon(
+                                Icons.attachment,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Obx(
+                          () => Positioned(
+                            left: controller.fileList.length <= 99 ? 25 : 20,
+                            bottom: 28,
+                            child: Text(
+                              controller.fileList.length <= 99
+                                  ? "${controller.fileList.length}"
+                                  : "99+",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
-            ),
+            )
+          ],
+        ),
+        if (controller.fileList.isNotEmpty)
+          const Divider(
+            color: Colors.grey,
           ),
-        ],
-      ),
+        if (controller.fileList.isNotEmpty)
+          SizedBox(
+            height: 50,
+            child: ListView.builder(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                scrollDirection: Axis.horizontal,
+                itemCount: controller.fileList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  // print(
+                  //     'controller.fileList.length: ${controller.fileList.length}, ${controller.fileList[index]}');
+                  return Row(
+                    children: [
+                      // Image.file(
+                      //     File(controller.fileList[index].path)),
+                      InteractiveViewer(
+                          minScale: 1.0,
+                          maxScale: 10.0,
+                          child: Image.memory(
+                            base64Decode(controller.fileList[index]),
+                            fit: BoxFit.contain,
+                            gaplessPlayback: true,
+                          )),
+                      const SizedBox(
+                        width: 10,
+                      )
+                    ],
+                  );
+                }),
+          ),
+        const Divider(color: Colors.grey),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Expanded(
+                child: Material(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                  elevation: 5,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 8.0, top: 2, bottom: 2),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Description",
+                      ),
+                      validator: ((value) {
+                        if (value == null || value == "") {
+                          return "Description is empty";
+                        } else {
+                          return null;
+                        }
+                      }),
+                      controller: controller.description,
+                      style: TextStyle(fontSize: 18),
+                      cursorHeight: 25.0,
+                      textDirection: TextDirection.ltr,
+                      minLines: 2,
+                      textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 3,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              SizedBox(
+                height: 50,
+                width: 50,
+                child: Card(
+                  elevation: 5,
+                  color: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40)),
+                  child: Center(
+                    child: IconButton(
+                      icon: const Icon(Icons.send),
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          showAlertDialog(Get.context!);
+                          await sendchatissue(url: insertSupportQueTypeApi).then((response) {
+                            if (response[0]) {
+                              Get.back();
+                              Get.back();
+                              snackbar(
+                                  'Report has been recorded successfully.');
+                              clearalldata();
+                            } else {
+                              Get.back();
+                              Get.back();
+                              snackbar(
+                                  'Something went wrong, please try later');
+                            }
+                          });
+                        }
+                      },
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     ),
   );
 }

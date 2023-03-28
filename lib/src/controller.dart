@@ -19,11 +19,12 @@ class Controller extends GetxController {
   RxList<String> issueTypeList = [CommonName.select].obs;
   var supportDetailsModel = SupportDetailsModel().obs;
 
-  getsupportdata(String empid, String clientid) async {
+  getsupportdata({required String empid, required String clientid, required String url}) async {
     var data = await APICalls.apicall(
         requests: "POST",
         param: {"EmployeeId": empid, "Client": clientid},
-        uri: "http://devsupport.ppms.co.in/api/ChatBot/GetEmployeeDetailsById",
+        uri: url,
+        // uri: "http://devsupport.ppms.co.in/api/ChatBot/GetEmployeeDetailsById",
         label: "GetSupportInfoApi");
     supportDetailsModel.value = SupportDetailsModel();
     if (data[0]) {
@@ -33,11 +34,10 @@ class Controller extends GetxController {
     // print("supportListsize => ${data.length}");
   }
 
-  getissuetypedata() async {
+  getissuetypedata({required String url}) async {
     var dropdowndata = await APICalls.apicall(
-        requests: "GET",
-        label: "GetIssueTypes",
-        uri: "http://devsupport.ppms.co.in/api/ChatBot/GetIssueTyeMaster");
+        requests: "GET", label: "GetIssueTypes", uri: url);
+    // uri: "http://devsupport.ppms.co.in/api/ChatBot/GetIssueTyeMaster");
     List<IssueTypeModel> c = [];
     if (dropdowndata[0]) {
       c = issueTypeModelFromJson(dropdowndata[1]);
@@ -49,13 +49,16 @@ class Controller extends GetxController {
     }
   }
 
-  getChatData() async {
+  getChatData(
+      {required String appname,
+      required String clientId,
+      required String url}) async {
     var dropdowndata = await APICalls.apicall(
-        param: {"ApplicationName": "Bandhu", "ClientId": "3008"},
+        param: {"ApplicationName": appname, "ClientId": clientId},
         requests: "POST",
         label: "GetChatData",
-        uri:
-            "http://devsupport.ppms.co.in/api/ChatBot/GetPreDefineQuestionMaster");
+        uri: url);
+    // uri: "http://devsupport.ppms.co.in/api/ChatBot/GetPreDefineQuestionMaster");
 
     if (dropdowndata[0]) {
       List<ChatDataModel> chatDataModel = (jsonDecode(dropdowndata[1]) as List)

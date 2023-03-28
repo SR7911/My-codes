@@ -42,3 +42,6 @@
 
 * Lower the version of Test bot func flow not affected by higher versions.
 
+## 1.2.4
+
+* UI Enhancement Fix.

@@ -1,6 +1,6 @@
 name: testbot
 description: A new Flutter Plugin for Support Queriesflutter pub publish. 
-version: 1.2.3
+version: 1.2.4
 homepage:  https://github.com/SR7911/My-projects
 
 environment:
