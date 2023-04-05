@@ -59,7 +59,7 @@ showAlertDialog(BuildContext context) {
             SizedBox(
               width: 25,
             ),
-            Text("Loading...")
+            Text("Please wait...")
           ],
         ),
       );

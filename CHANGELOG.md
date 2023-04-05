@@ -45,3 +45,23 @@
 ## 1.2.4
 
 * UI Enhancement Fix.
+
+## 1.2.5
+
+* UI Enhancement Fix.
+
+## 1.2.6
+
+* UI Enhancement Fix.
+
+## 1.2.7
+
+* UI Enhancement Fix.
+
+## 1.2.8
+
+* UI Enhancement Fix.
+
+## 1.2.9
+
+* UI Enhancement Fix.

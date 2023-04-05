@@ -123,8 +123,19 @@ class _MyAppState extends State<MyApp> {
             bottommargin: Get.height / 6.5,
             topmargin: Get.height / 50,
             context: context,
-            empid: "36370",
-            clientid: "3008",
+            empid: '58402',
+            clientId: '1000',
+            appName: 'Bandhu',
+            getEmpDetailsApi:
+                'http://qa-chatbot.ppms.co.in/api/ChatBot/GetEmployeeDetailsById',
+            getIssueTypeApi:
+                'http://qa-chatbot.ppms.co.in/api/ChatBot/GetIssueTyeMaster',
+            getPreDefineQueApi:
+                'http://qa-chatbot.ppms.co.in/api/ChatBot/GetPreDefineQuestionMaster',
+            insertSupportQueApi:
+                'http://qa-chatbot.ppms.co.in/api/ChatBot/InsertSupportQuery',
+            insertSupportQueTypeApi:
+                'http://qa-chatbot.ppms.co.in/api/ChatBot/InsertSupportQueryType2',
             initialvisibility: true,
             module: change)
       ]),

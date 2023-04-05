@@ -12,14 +12,20 @@ import 'package:testbot/src/sqflite/database.dart';
 
 class Controller extends GetxController {
   RxList fileList = [].obs;
-  RxString issueType = "Select".obs;
+  var issueType =
+      IssueTypeModel(issueTypeId: 0, issueTypeName: CommonName.select).obs;
   RxString issueContent = "".obs;
   TextEditingController description = TextEditingController();
-
-  RxList<String> issueTypeList = [CommonName.select].obs;
+//CommonName.select
+  RxList<IssueTypeModel> issueTypeList = <IssueTypeModel>[
+    IssueTypeModel(issueTypeId: -1, issueTypeName: CommonName.select)
+  ].obs;
   var supportDetailsModel = SupportDetailsModel().obs;
 
-  getsupportdata({required String empid, required String clientid, required String url}) async {
+  getsupportdata(
+      {required String empid,
+      required String clientid,
+      required String url}) async {
     var data = await APICalls.apicall(
         requests: "POST",
         param: {"EmployeeId": empid, "Client": clientid},
@@ -35,18 +41,39 @@ class Controller extends GetxController {
   }
 
   getissuetypedata({required String url}) async {
+    // var dropdowndata = await APICalls.apicall(
+    //     requests: "GET", label: "GetIssueTypes", uri: url);
+    // // uri: "http://devsupport.ppms.co.in/api/ChatBot/GetIssueTyeMaster");
+    // List<IssueTypeModel> c = [];
+    // if (dropdowndata[0]) {
+    //   c = issueTypeModelFromJson(dropdowndata[1]);
+    // }
+    // issueTypeList.value = [CommonName.select];
+    // for (int i = 0; i < c.length; i++) {
+    //   issueTypeList.add(c[i].issueTypeName!);
+    //   print("${issueTypeList.toString()}");
+    // }
+
+    issueTypeList.value = <IssueTypeModel>[
+      IssueTypeModel(issueTypeId: -1, issueTypeName: CommonName.select)
+    ];
+    issueType.value =
+        IssueTypeModel(issueTypeId: -1, issueTypeName: CommonName.select);
     var dropdowndata = await APICalls.apicall(
         requests: "GET", label: "GetIssueTypes", uri: url);
     // uri: "http://devsupport.ppms.co.in/api/ChatBot/GetIssueTyeMaster");
-    List<IssueTypeModel> c = [];
+
     if (dropdowndata[0]) {
-      c = issueTypeModelFromJson(dropdowndata[1]);
+      // issueTypeList.value = issueTypeModelFromJson(dropdowndata[1]);
+      // issueTypeList.add(
+      //     IssueTypeModel(issueTypeId: -1, issueTypeName: CommonName.select));
     }
-    issueTypeList.value = [CommonName.select];
-    for (int i = 0; i < c.length; i++) {
-      issueTypeList.add(c[i].issueTypeName!);
-      print("${issueTypeList.toString()}");
-    }
+    issueTypeList.refresh();
+    // issueTypeList.value = [CommonName.select];
+    // for (int i = 0; i < c.length; i++) {
+    //   issueTypeList.add(c[i].issueTypeName!);
+    //   print("${issueTypeList.toString()}");
+    // }
   }
 
   getChatData(
