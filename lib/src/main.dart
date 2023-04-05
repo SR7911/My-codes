@@ -1386,8 +1386,21 @@ clearalldata() {
   controller.description = TextEditingController();
   controller.fileList.clear();
   controller.issueContent.value = '';
-  controller.issueType.value =
-      IssueTypeModel(issueTypeId: 0, issueTypeName: CommonName.select);
+  try {
+    controller.issueType.value = controller.issueTypeList[0];
+  } catch (e) {
+    controller.issueType.value = IssueTypeModel(
+        issueTypeId: -1,
+        issueTypeName: CommonName.select,
+        clientId: '',
+        connectionstring: '',
+        createdBy: '',
+        createdDate: DateTime.now(),
+        modifiedBy: '',
+        modifiedDate: DateTime.now(),
+        returnErrorMessage: '',
+        returnStatus: false);
+  }
   // controller.startchat = ["Yes", "No"];
   controller.selectedstartchat.value = "";
   controller.question1.clear();

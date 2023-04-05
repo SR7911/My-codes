@@ -65,3 +65,7 @@
 ## 1.2.9
 
 * UI Enhancement Fix.
+
+## 1.3.0
+
+* UI Enhancement Fix.

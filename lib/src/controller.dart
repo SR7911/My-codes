@@ -12,14 +12,10 @@ import 'package:testbot/src/sqflite/database.dart';
 
 class Controller extends GetxController {
   RxList fileList = [].obs;
-  var issueType =
-      IssueTypeModel(issueTypeId: 0, issueTypeName: CommonName.select).obs;
   RxString issueContent = "".obs;
   TextEditingController description = TextEditingController();
-//CommonName.select
-  RxList<IssueTypeModel> issueTypeList = <IssueTypeModel>[
-    IssueTypeModel(issueTypeId: -1, issueTypeName: CommonName.select)
-  ].obs;
+  Rx<IssueTypeModel> issueType = IssueTypeModel().obs;
+  RxList<IssueTypeModel> issueTypeList = <IssueTypeModel>[].obs;
   var supportDetailsModel = SupportDetailsModel().obs;
 
   getsupportdata(
@@ -55,18 +51,39 @@ class Controller extends GetxController {
     // }
 
     issueTypeList.value = <IssueTypeModel>[
-      IssueTypeModel(issueTypeId: -1, issueTypeName: CommonName.select)
+      IssueTypeModel(
+          issueTypeId: -1,
+          issueTypeName: CommonName.select,
+          clientId: '',
+          connectionstring: '',
+          createdBy: '',
+          createdDate: DateTime.now(),
+          modifiedBy: '',
+          modifiedDate: DateTime.now(),
+          returnErrorMessage: '',
+          returnStatus: false)
     ];
-    issueType.value =
-        IssueTypeModel(issueTypeId: -1, issueTypeName: CommonName.select);
+    issueType.value = issueTypeList[0];
     var dropdowndata = await APICalls.apicall(
         requests: "GET", label: "GetIssueTypes", uri: url);
     // uri: "http://devsupport.ppms.co.in/api/ChatBot/GetIssueTyeMaster");
 
     if (dropdowndata[0]) {
-      // issueTypeList.value = issueTypeModelFromJson(dropdowndata[1]);
-      // issueTypeList.add(
-      //     IssueTypeModel(issueTypeId: -1, issueTypeName: CommonName.select));
+      issueTypeList.value = <IssueTypeModel>[
+        IssueTypeModel(
+            issueTypeId: -1,
+            issueTypeName: CommonName.select,
+            clientId: '',
+            connectionstring: '',
+            createdBy: '',
+            createdDate: DateTime.now(),
+            modifiedBy: '',
+            modifiedDate: DateTime.now(),
+            returnErrorMessage: '',
+            returnStatus: false)
+      ];
+      issueTypeList.addAll(issueTypeModelFromJson(dropdowndata[1]));
+      issueType.value = issueTypeList[0];
     }
     issueTypeList.refresh();
     // issueTypeList.value = [CommonName.select];
