@@ -127,89 +127,93 @@ supportbot({required String insertSupportQueAPI, required String clientId}) {
   return showDialog(
     context: Get.context!,
     builder: (context) {
-      return Dialog(
-        insetPadding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-        backgroundColor: primaryClr,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        elevation: 16,
-        child: SizedBox(
-          height: Get.height / 1.7,
-          width: double.infinity,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      child: Icon(Icons.support_agent,
-                          color: Colors.white, size: 30),
-                    ),
-                    const Text(
-                      'Get support now',
-                      style: TextStyle(
+      return MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: Dialog(
+          insetPadding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+          backgroundColor: primaryClr,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          elevation: 16,
+          child: SizedBox(
+            height: Get.height / 1.7,
+            width: double.infinity,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: Icon(Icons.support_agent,
+                            color: Colors.white, size: 30),
+                      ),
+                      const Text(
+                        'Get support now',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                        textAlign: TextAlign.center,
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            color: Colors.white,
+                          )),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Support person : ",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                      Text(
+                        "${controller.supportDetailsModel.value.supportingPersonName}",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade300),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        " (${controller.supportDetailsModel.value.supportingPersonEmailId})",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade300),
+                      ),
+                      IconButton(
+                          icon: Icon(Icons.call),
+                          onPressed: () {
+                            // launchUrl("tel:+916383421413");
+                            launchUrl(
+                                "tel:+91${controller.supportDetailsModel.value.mobileNo}");
+                          },
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                      textAlign: TextAlign.center,
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.close_rounded,
-                          color: Colors.white,
-                        )),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Support person : ",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    Text(
-                      "${controller.supportDetailsModel.value.supportingPersonName}",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade300),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      " (${controller.supportDetailsModel.value.supportingPersonEmailId})",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade300),
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.call),
-                        onPressed: () {
-                          // launchUrl("tel:+916383421413");
-                          launchUrl(
-                              "tel:+91${controller.supportDetailsModel.value.mobileNo}");
-                        },
-                        color: Colors.white,
-                        iconSize: 18.0)
-                  ],
-                ),
-                Expanded(
-                    child: buildRow(context,
-                        insertSupportQueAPI: insertSupportQueAPI,
-                        clientId: clientId))
-              ],
+                          iconSize: 18.0)
+                    ],
+                  ),
+                  Expanded(
+                      child: buildRow(context,
+                          insertSupportQueAPI: insertSupportQueAPI,
+                          clientId: clientId))
+                ],
+              ),
             ),
           ),
         ),
@@ -397,7 +401,10 @@ Widget buildRow(BuildContext context,
                                 .map((IssueTypeModel value) =>
                                     DropdownMenuItem<IssueTypeModel>(
                                       value: value,
-                                      child: Text(value.issueTypeName!),
+                                      child: Text(
+                                        value.issueTypeName!,
+                                        textScaleFactor: 1.0,
+                                      ),
                                     ))
                                 .toList(),
                             onChanged: (value) {
@@ -685,162 +692,172 @@ autochat({required String insertSupportQueTypeApi, required String clientId}) {
   showDialog(
     context: Get.context!,
     builder: (context) {
-      return Dialog(
-        insetPadding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        elevation: 16,
-        child: SizedBox(
-          height: Get.height / 1.5,
-          width: double.infinity,
-          child: Obx(
-            () => Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: primaryClr,
-                        borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(10))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            child: Icon(Icons.contact_support,
-                                color: Colors.white, size: 30),
-                          ),
-                          const Text(
-                            'Chat with us now!',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                            textAlign: TextAlign.center,
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(
-                                Icons.close_rounded,
-                                color: Colors.white,
-                              )),
-                        ],
+      return MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: Dialog(
+          insetPadding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+          backgroundColor: Colors.white,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          elevation: 16,
+          child: SizedBox(
+            height: Get.height / 1.5,
+            width: double.infinity,
+            child: Obx(
+              () => Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: primaryClr,
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(10))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              child: Icon(Icons.contact_support,
+                                  color: Colors.white, size: 30),
+                            ),
+                            const Text(
+                              'Chat with us now!',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                              textAlign: TextAlign.center,
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(
+                                  Icons.close_rounded,
+                                  color: Colors.white,
+                                )),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      color: Colors.blue.shade50,
-                      child: ListView(
-                        controller: _controller,
-                        children: [
-                          chattextfrombot(
-                              "Hi ${controller.supportDetailsModel.value.employeeName ?? ''}, May I help you?"),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: controller.startchat.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return chatbuttonstart(index);
-                                }),
-                          ),
-                          if (controller.selectedstartchat.value != '')
-                            chattext(controller.selectedstartchat.value),
-                          if (controller.selectedstartchat.value != '' &&
-                              controller.selectedno.value == '')
+                    Expanded(
+                      child: Container(
+                        color: Colors.blue.shade50,
+                        child: ListView(
+                          controller: _controller,
+                          children: [
                             chattextfrombot(
-                                'Please select the area of concern'),
-                          if (controller.selectedno.value != '')
-                            chattextfrombot(controller.selectedno.value),
-                          //First widget
+                                "Hi ${controller.supportDetailsModel.value.employeeName ?? ''}, May I help you?"),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller.startchat.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return chatbuttonstart(index);
+                                  }),
+                            ),
+                            if (controller.selectedstartchat.value != '')
+                              chattext(controller.selectedstartchat.value),
+                            if (controller.selectedstartchat.value != '' &&
+                                controller.selectedno.value == '')
+                              chattextfrombot(
+                                  'Please select the area of concern'),
+                            if (controller.selectedno.value != '')
+                              chattextfrombot(controller.selectedno.value),
+                            //First widget
 
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: controller.question1.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return chatbuttonset1(index);
-                                }),
-                          ),
-                          if (controller.selectedquestion1.value != '')
-                            chattext(controller.selectedquestion1.value),
-                          // Second widget
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: controller.question2.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return chatbuttonset2(index);
-                                }),
-                          ),
-                          if (controller.selectedquestion2.value != '')
-                            chattext(controller.selectedquestion2.value),
-                          //Third widget
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: controller.question3.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return chatbuttonset3(index);
-                                }),
-                          ),
-                          if (controller.selectedquestion3.value != '')
-                            chattext(controller.selectedquestion3.value),
-                          //Fourth widget
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: controller.question4.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return chatbuttonset4(index);
-                                }),
-                          ),
-                          if (controller.selectedquestion4.value != '')
-                            chattext(controller.selectedquestion4.value),
-                          //Fifth widget
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: controller.question5.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return chatbuttonset5(index);
-                                }),
-                          ),
-                          if (controller.selectedquestion5.value != '')
-                            chattext(controller.selectedquestion5.value),
-                          if (controller.selectedendquestion.value != '')
-                            chattextendfrombot(
-                                "Our Support team will respond you shortly, please describe your queries here."),
-                          if (controller.selectedendquestion.value != '')
-                            chattextendfrombot(
-                                'If required further assistance, please write to support desk help@bandhuhr.co.in'),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller.question1.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return chatbuttonset1(index);
+                                  }),
+                            ),
+                            if (controller.selectedquestion1.value != '')
+                              chattext(controller.selectedquestion1.value),
+                            // Second widget
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller.question2.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return chatbuttonset2(index);
+                                  }),
+                            ),
+                            if (controller.selectedquestion2.value != '')
+                              chattext(controller.selectedquestion2.value),
+                            //Third widget
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller.question3.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return chatbuttonset3(index);
+                                  }),
+                            ),
+                            if (controller.selectedquestion3.value != '')
+                              chattext(controller.selectedquestion3.value),
+                            //Fourth widget
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller.question4.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return chatbuttonset4(index);
+                                  }),
+                            ),
+                            if (controller.selectedquestion4.value != '')
+                              chattext(controller.selectedquestion4.value),
+                            //Fifth widget
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 5, 100, 5),
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller.question5.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return chatbuttonset5(index);
+                                  }),
+                            ),
+                            if (controller.selectedquestion5.value != '')
+                              chattext(controller.selectedquestion5.value),
+                            if (controller.selectedendquestion.value != '')
+                              chattextendfrombot(
+                                  "Our Support team will respond you shortly, please describe your queries here."),
+                            if (controller.selectedendquestion.value != '')
+                              chattextendfrombot(
+                                  'If required further assistance, please write to support desk help@bandhuhr.co.in'),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const Divider(color: Colors.grey),
-                  if (controller.selectedendquestion.value != "")
-                    sendmessage(context,
-                        insertSupportQueTypeApi: insertSupportQueTypeApi,
-                        clientId: clientId),
-                ],
+                    const Divider(color: Colors.grey),
+                    if (controller.selectedendquestion.value != "")
+                      sendmessage(context,
+                          insertSupportQueTypeApi: insertSupportQueTypeApi,
+                          clientId: clientId),
+                  ],
+                ),
               ),
             ),
           ),
@@ -1341,7 +1358,7 @@ sendmessage(BuildContext context,
                             showAlertDialog(Get.context!);
                             await sendchatissue(
                                     url: insertSupportQueTypeApi,
-                                    clientId: clientId)
+                                    clientId: "3008")
                                 .then((response) {
                               if (response[0]) {
                                 Get.back();

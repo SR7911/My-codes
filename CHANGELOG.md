@@ -69,3 +69,7 @@
 ## 1.3.0
 
 * UI Enhancement Fix.
+
+## 1.3.1
+
+* UI Enhancement Fix IOS.
