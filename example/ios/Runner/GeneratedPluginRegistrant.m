@@ -12,16 +12,10 @@
 @import file_picker;
 #endif
 
-#if __has_include(<flutter_image_compress/ImageCompressPlugin.h>)
-#import <flutter_image_compress/ImageCompressPlugin.h>
+#if __has_include(<flutter_image_compress_common/ImageCompressPlugin.h>)
+#import <flutter_image_compress_common/ImageCompressPlugin.h>
 #else
-@import flutter_image_compress;
-#endif
-
-#if __has_include(<path_provider_foundation/PathProviderPlugin.h>)
-#import <path_provider_foundation/PathProviderPlugin.h>
-#else
-@import path_provider_foundation;
+@import flutter_image_compress_common;
 #endif
 
 #if __has_include(<sqflite/SqflitePlugin.h>)
@@ -47,7 +41,6 @@
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [FilePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FilePickerPlugin"]];
   [ImageCompressPlugin registerWithRegistrar:[registry registrarForPlugin:@"ImageCompressPlugin"]];
-  [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
   [TestbotPlugin registerWithRegistrar:[registry registrarForPlugin:@"TestbotPlugin"]];
   [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];

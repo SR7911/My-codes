@@ -202,7 +202,7 @@ supportbot({required String insertSupportQueAPI, required String clientId}) {
                           onPressed: () {
                             // launchUrl("tel:+916383421413");
                             launchUrl(
-                                "tel:+91${controller.supportDetailsModel.value.mobileNo}");
+                                "tel:+91${controller.supportDetailsModel.value.supportingPersonMobileNo}");
                           },
                           color: Colors.white,
                           iconSize: 18.0)
@@ -846,7 +846,7 @@ autochat({required String insertSupportQueTypeApi, required String clientId}) {
                                   "Our Support team will respond you shortly, please describe your queries here."),
                             if (controller.selectedendquestion.value != '')
                               chattextendfrombot(
-                                  'If required further assistance, please write to support desk help@bandhuhr.co.in'),
+                                  'If required further assistance, please write to support desk helpdesk@ppms.in'),
                           ],
                         ),
                       ),

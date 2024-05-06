@@ -4,7 +4,6 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io' as io;
-import 'package:path_provider/path_provider.dart';
 import 'package:testbot/src/common_name.dart';
 import 'package:testbot/src/model/chat_data_model.dart';
 

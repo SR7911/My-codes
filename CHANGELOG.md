@@ -73,3 +73,7 @@
 ## 1.3.1
 
 * UI Enhancement Fix IOS.
+
+## 1.3.2
+
+* UI Enhancement Fix and sdk 34 support.
